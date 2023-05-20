@@ -1,0 +1,26 @@
+main:
+  models_dir: models #Relative to the root of the repo
+  fine_tuned_model_dir: fine_tuned_model
+wandb:
+  project: tweets_classification
+mlflow:
+  tracking_uri: mlruns # Relative to the root of the repo, currently only a local path is supported as uri
+transformers:
+  pretrained_model: distilbert-base-uncased
+early_stopping:
+  patience: 1
+training:
+  seed: 8833
+  num_train_epochs: 4
+  per_device_train_batch_size: 256
+  per_device_eval_batch_size: 256
+  weight_decay: 0.01
+  evaluation_strategy: epoch
+  disable_tqdm: False
+  push_to_hub: False
+  log_level: error
+  logging_strategy: epoch
+  report_to:
+    - wandb
+  logging_first_step: False
+  save_strategy: 'epoch'

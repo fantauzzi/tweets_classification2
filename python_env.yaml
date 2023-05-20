@@ -1,0 +1,13 @@
+python: "3.11.3"# TODO make pruning optional and configurable and trials repeatable with a seed
+build_dependencies:
+  - pip==23.1.2
+dependencies:
+  - mlflow==2.3.1
+  - matplotlib==3.7.1
+  - numpy==1.24.3
+  - scikit_learn==1.2.2
+  - torch==2.0.0
+  - hydra-core==1.3.2
+  - optuna==3.1.1
+  - transformers==4.28.1
+  - datasets==2.12.0
