@@ -1,4 +1,4 @@
-python: "3.11.3"# TODO make pruning optional and configurable and trials repeatable with a seed
+python: "3.11.3"
 build_dependencies:
   - pip==23.1.2
 dependencies:

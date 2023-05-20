@@ -2,7 +2,7 @@ from os import system
 from pathlib import Path
 
 import hydra
-import mlflow as mf
+# import mlflow as mf
 import torch
 import transformers
 from datasets import load_dataset
@@ -12,11 +12,11 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trai
     DistilBertForSequenceClassification
 
 import wandb
-from utils import info, warning, info_active_run, compute_metrics, get_name_for_run
+from utils import info, warning, compute_metrics
 
 
-@hydra.main(version_base='1.3', config_path='../config', config_name='params')
-def main(params: DictConfig) -> None:
+# @hydra.main(version_base='1.3', config_path='../config', config_name='params')
+def train(params: DictConfig) -> None:
     """
     Tune the hyperparameters for best fine-tuning the model
     :param params: the configuration parameters passed by Hydra
@@ -41,8 +41,8 @@ def main(params: DictConfig) -> None:
     repo_root = Path('..').resolve()
 
     # Absolute path to the MLFlow tracking dir; currently supported only in the local filesystem
-    tracking_uri = repo_root / params.mlflow.tracking_uri
-    mf.set_tracking_uri(tracking_uri)  # set_tracking_uri() expects an absolute path
+    # tracking_uri = repo_root / params.mlflow.tracking_uri
+    # mf.set_tracking_uri(tracking_uri)  # set_tracking_uri() expects an absolute path
 
     # Absolute path to the directory where model and model checkpoints are to be saved and loaded from
     models_path = (repo_root / params.main.models_dir).resolve()
@@ -56,11 +56,13 @@ def main(params: DictConfig) -> None:
     ''' If there is no MLFlow run currently ongoing, then start one. Note that is this script has been started from
      shell with `mlflow run` then a run is ongoing already, no need to start it'''
 
+    """
     if mf.active_run() is None:
         info('No active MLFlow run, starting one now')
         mf.start_run(run_name=get_name_for_run())
+    """
 
-    info_active_run()
+    # info_active_run()
 
     if not models_path.exists():
         models_path.mkdir()
@@ -74,7 +76,7 @@ def main(params: DictConfig) -> None:
     nvidia_info_filename = 'nvidia-smi.txt'
     nvidia_info_path = repo_root / nvidia_info_filename
     system(f'nvidia-smi -q > {nvidia_info_path}')
-    mf.log_artifact(str(nvidia_info_path))
+    # mf.log_artifact(str(nvidia_info_path))
     nvidia_info_path.unlink(missing_ok=True)
 
     emotions = load_dataset('emotion')
@@ -115,8 +117,13 @@ def main(params: DictConfig) -> None:
         res = trainer.train()
         info(f'Model tuning completed with results {res}')
 
-        info(f'Mode fine tuning results: {res}')
+        info(f'Model fine tuning results: {res}')
         trainer.save_model(tuned_model_path)
+
+
+@hydra.main(version_base='1.3', config_path='../config', config_name='params')
+def main(params: DictConfig) -> None:
+    train(params)
 
 
 if __name__ == '__main__':
