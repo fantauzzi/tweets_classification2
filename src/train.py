@@ -80,7 +80,7 @@ def train(params: DictConfig) -> None:
     # mf.log_artifact(str(nvidia_info_path))
     nvidia_info_path.unlink(missing_ok=True)
 
-    emotions = load_dataset('emotion', num_proc=16)
+    emotions = load_dataset('emotion')  # num_proc=16
     pretrained_model = params.transformers.pretrained_model
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 
@@ -101,8 +101,7 @@ def train(params: DictConfig) -> None:
             num_labels=num_labels).to(device)
         training_args = TrainingArguments(output_dir=output_dir,
                                           load_best_model_at_end=True,
-                                          dataloader_num_workers=16,
-                                          **OmegaConf.to_object(params.training))
+                                          **OmegaConf.to_object(params.training))  # dataloader_num_workers=16
 
         callbacks = [
             transformers.EarlyStoppingCallback(
@@ -176,12 +175,12 @@ Optimize hyper-parameters tuning such that it saves the best model so far at eve
     computed again later (is it even possible?) -> Done (yes it is)
 Provide an easy way to coordinate the trial info (in the SQLite DB) with the run info in MLFlow -> Done
 Log with MLFlow the Optuna trial id of every nested run, also make sure the study name is logged -> Done
+Allow the option to resume from a previous sweep: cannot be done by API, need adapter to run/resume sweep from CLI or UI
+Test with mlflow run, both single training and sweep
 
-Tag the best nested run as such, will have to remove and re-assign the tag of best nested run as needed 
-Log computation times
 Make a GUI via gradio and / or streamlit
 Version the saved model(also the dataset?)
-Follow Andrej recipe
-Plot charts to MLFlow for debugging of the training process, as per Andrej's lectures
+Follow Andrej recipe 
+Plot charts to W&B for debugging of the training process, as per Andrej's lectures
 Give the model an API, deploy it, unit-test it
 """

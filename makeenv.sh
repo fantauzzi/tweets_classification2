@@ -21,6 +21,6 @@ eval "$(pyenv init -)"
 pyenv activate python3.11.3
 
 # Python packages
-# rsync -azP --exclude=models /home/fanta/workspace/tweets_classification2 <destination>
+# rsync -azP --exclude=models --exclude=mlruns --exclude=src/outputs /home/fanta/workspace/tweets_classification2 <destination>
 pip install --upgrade pip
 pip install -r /home/ubuntu/tweets_classification2/requirements.txt
