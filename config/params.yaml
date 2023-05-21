@@ -3,7 +3,7 @@ main:
   fine_tuned_model_dir: fine_tuned_model
 wandb:
   project: tweets_classification_prj
-  count: 3
+  count: 20
 mlflow:
   tracking_uri: mlruns # Relative to the root of the repo, currently only a local path is supported as uri
 transformers:

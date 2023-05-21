@@ -1,5 +1,6 @@
 from os import system
 from pathlib import Path
+from shutil import copytree, rmtree
 
 import hydra
 # import mlflow as mf
@@ -12,7 +13,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trai
     DistilBertForSequenceClassification
 
 import wandb
-from utils import info, warning, compute_metrics
+from utils import info, warning, compute_metrics, get_eval_f1_from_best_epoch
 
 
 # @hydra.main(version_base='1.3', config_path='../config', config_name='params')
@@ -79,7 +80,7 @@ def train(params: DictConfig) -> None:
     # mf.log_artifact(str(nvidia_info_path))
     nvidia_info_path.unlink(missing_ok=True)
 
-    emotions = load_dataset('emotion')
+    emotions = load_dataset('emotion', num_proc=16)
     pretrained_model = params.transformers.pretrained_model
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 
@@ -100,6 +101,7 @@ def train(params: DictConfig) -> None:
             num_labels=num_labels).to(device)
         training_args = TrainingArguments(output_dir=output_dir,
                                           load_best_model_at_end=True,
+                                          dataloader_num_workers=16,
                                           **OmegaConf.to_object(params.training))
 
         callbacks = [
@@ -115,10 +117,30 @@ def train(params: DictConfig) -> None:
                           callbacks=callbacks)
 
         res = trainer.train()
-        info(f'Model tuning completed with results {res}')
-
         info(f'Model fine tuning results: {res}')
-        trainer.save_model(tuned_model_path)
+
+        if run.sweep_id is None:
+            info(f'Saving fine tuned model in {tuned_model_path}')
+            trainer.save_model(tuned_model_path)
+        else:
+            api = wandb.Api()
+            sweep_long_id = f'{run.entity}/{run.project}/{run.sweep_id}'
+            sweep = api.sweep(sweep_long_id)
+            best_run = sweep.best_run()
+            # metrics = best_run.history(samples=9999999999, keys=['eval/f1'])
+            # best_run_metric = max(metrics['eval/f1'])
+            # eval_f1 = res['eval_f1']
+            eval_f1, best_loss, best_step = get_eval_f1_from_best_epoch(trainer.state.log_history)
+            if best_run.id == run.id:
+                info(f'Current trial (run) improved the evaluation metric to {eval_f1}')
+                if Path(tuned_model_path).exists():
+                    info(
+                        f'Overwriting {tuned_model_path} with best fine tuned model so far, coming from checkpoint {trainer.state.best_model_checkpoint}')
+                    rmtree(tuned_model_path)
+                else:
+                    info(
+                        f'Saving best fine tuned model so far into {tuned_model_path}, coming from checkpoint {trainer.state.best_model_checkpoint}')
+                copytree(trainer.state.best_model_checkpoint, tuned_model_path)
 
 
 @hydra.main(version_base='1.3', config_path='../config', config_name='params')
