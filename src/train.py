@@ -175,9 +175,11 @@ Optimize hyper-parameters tuning such that it saves the best model so far at eve
     computed again later (is it even possible?) -> Done (yes it is)
 Provide an easy way to coordinate the trial info (in the SQLite DB) with the run info in MLFlow -> Done
 Log with MLFlow the Optuna trial id of every nested run, also make sure the study name is logged -> Done
-Allow the option to resume from a previous sweep: cannot be done by API, need adapter to run/resume sweep from CLI or UI
-Test with mlflow run, both single training and sweep
+Allow the option to resume from a previous sweep -> Done
 
+Version the choice of best model
+Implement proper validation and test
+Reintroduce plot of confusion matrix
 Make a GUI via gradio and / or streamlit
 Version the saved model(also the dataset?)
 Follow Andrej recipe 

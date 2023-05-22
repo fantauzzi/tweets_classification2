@@ -7,8 +7,11 @@
     <list default="true" id="fa6999a3-6435-4a21-abee-bf665db45413" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/params.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/params.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/sweep.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/sweep.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/runme.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sweep.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sweep.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,11 +41,32 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/fanta/workspace/tweets_classification2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+    &quot;last_opened_file_path&quot;: &quot;/home/fanta/workspace/homework1&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.new.ui&quot;
   }
 }</component>
   <component name="RunManager" selected="Python.sweep">
+    <configuration name="runme" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="tweets_classification2" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/runme.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="sweep" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tweets_classification2" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -86,12 +110,14 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.runme" />
       <item itemvalue="Python.train" />
       <item itemvalue="Python.sweep" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.sweep" />
+        <item itemvalue="Python.runme" />
         <item itemvalue="Python.train" />
       </list>
     </recent_temporary>
@@ -111,9 +137,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/train.py</url>
-          <line>132</line>
-          <option name="timeStamp" value="4" />
+          <url>file://$PROJECT_DIR$/src/sweep.py</url>
+          <line>36</line>
+          <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

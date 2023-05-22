@@ -33,6 +33,10 @@ def main(params: DictConfig) -> None:
     # Configure the sweep
     info(f'Loading sweep configuration from {sweep_config_path}')
     sweep_configuration = OmegaConf.load(sweep_config_path)
+    # If the sweep config. contains a 'command' key, then remove it. That is needed only to start a sweep from the CLI;
+    # here it would generate an error `omegaconf.errors.InterpolationKeyError: Interpolation key 'env' not found`
+    if sweep_configuration.get('command') is not None:
+        del sweep_configuration['command']
     sweep_configuration = OmegaConf.to_object(sweep_configuration)
 
     # Start a sweep
