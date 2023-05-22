@@ -1,6 +1,11 @@
 method: bayes
 name: tweets_classification_sweep
-program: main.py
+program: train.py
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - ${args_no_hyphens}
 metric:
   goal: maximize
   name: eval/f1

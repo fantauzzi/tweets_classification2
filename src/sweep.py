@@ -10,12 +10,19 @@ import wandb
 from train import train
 from utils import info
 
+'''
+NOTE 
+To start the sweep from command line, cd into the `src` directory and then:
+wandb sweep --project <wandb_project> ../config/sweep.yaml
+
+To resume a sweep (cannot be in Finished state):
+wandb sweep --resume  <entity>/<wandb_project>/<sweep_id>
+'''
+
 prj_root = Path('..').resolve()
 config_path = (prj_root / 'config').resolve()
 sweep_config_path = config_path / 'sweep.yaml'
 
-
-# TODO login here with wandb
 
 @hydra.main(version_base='1.3', config_path='../config', config_name='params')
 def main(params: DictConfig) -> None:
