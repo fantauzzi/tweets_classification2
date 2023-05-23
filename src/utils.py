@@ -1,10 +1,14 @@
 import logging
+from pathlib import Path
 
 import numpy as np
 import transformers
 from matplotlib import pyplot as plt
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 from sklearn.metrics import accuracy_score, f1_score
+from wandb.sdk.wandb_run import Run
+
+from wandb import Artifact
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 _logger = logging.getLogger()
@@ -56,3 +60,10 @@ def get_eval_f1_from_best_epoch(log_history: list[dict]) -> (float, float, int):
             step = entry['step']
             eval_f1 = entry['eval_f1']
     return eval_f1, lowest_eval_loss, step
+
+
+def log_model_as_artifact(run: Run, name: str, local_path: str | Path) -> Artifact:
+    artifact = Artifact(name=name, type='model')
+    artifact.add_dir(local_path=local_path, name=Path(local_path).name)
+    run.log_artifact(artifact)
+    return artifact

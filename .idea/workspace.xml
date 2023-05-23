@@ -7,9 +7,6 @@
     <list default="true" id="fa6999a3-6435-4a21-abee-bf665db45413" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/params.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/params.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/runme.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sweep.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sweep.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
@@ -23,6 +20,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/.pyenv/versions/tweets/lib/python3.11/site-packages/datasets/load.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.pyenv/versions/tweets/lib/python3.11/site-packages/omegaconf/base.py" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/.pyenv/versions/tweets/lib/python3.11/site-packages/transformers/trainer.py" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/.pyenv/versions/tweets/lib/python3.11/site-packages/transformers/training_args.py" root0="SKIP_INSPECTION" />
   </component>
@@ -36,16 +34,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/fanta/workspace/homework1&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.ide.settings.new.ui&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/fanta/workspace/homework1",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
-  <component name="RunManager" selected="Python.sweep">
+}]]></component>
+  <component name="RunManager" selected="Python.train">
     <configuration name="runme" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tweets_classification2" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -116,9 +114,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.train" />
         <item itemvalue="Python.sweep" />
         <item itemvalue="Python.runme" />
-        <item itemvalue="Python.train" />
       </list>
     </recent_temporary>
   </component>
@@ -137,9 +135,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/sweep.py</url>
-          <line>36</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/src/train.py</url>
+          <line>114</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

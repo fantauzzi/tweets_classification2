@@ -11,9 +11,11 @@ from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, OmegaConf
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments, \
     DistilBertForSequenceClassification
+from wandb.sdk.wandb_run import Run
 
 import wandb
-from utils import info, warning, compute_metrics, get_eval_f1_from_best_epoch
+from utils import info, warning, compute_metrics, get_eval_f1_from_best_epoch, log_model_as_artifact
+from wandb import Artifact
 
 
 # @hydra.main(version_base='1.3', config_path='../config', config_name='params')
@@ -74,11 +76,6 @@ def train(params: DictConfig) -> None:
         warning(f'No GPU found, device type is {device.type}')
 
     # Save the output of nvidia-smi (GPU info) into a text file, log it with MLFlow then delete the file
-    nvidia_info_filename = 'nvidia-smi.txt'
-    nvidia_info_path = repo_root / nvidia_info_filename
-    system(f'nvidia-smi -q > {nvidia_info_path}')
-    # mf.log_artifact(str(nvidia_info_path))
-    nvidia_info_path.unlink(missing_ok=True)
 
     emotions = load_dataset('emotion')  # num_proc=16
     pretrained_model = params.transformers.pretrained_model
@@ -94,11 +91,27 @@ def train(params: DictConfig) -> None:
     info(f'Training set contains {len(emotions_encoded["train"])} samples')
     model_name = f"{pretrained_model}-finetuned-emotion"
 
+    def log_nvidia_smi(run: Run) -> None:
+        nvidia_info_filename = 'nvidia-smi.txt'
+        nvidia_info_path = repo_root / nvidia_info_filename
+        system(f'nvidia-smi -q > {nvidia_info_path}')
+        artifact = Artifact(name='nvidia-smi', type='text')
+        artifact.add_file(local_path=nvidia_info_path)
+        run.log_artifact(artifact)
+        nvidia_info_path.unlink(missing_ok=True)
+
     with wandb.init(params.wandb.project, config={'params': OmegaConf.to_object(params)}) as run:
+        if device.type == 'cuda':
+            log_nvidia_smi(run)
+
         output_dir = str(models_path / model_name / 'fine-tuning')
         model: DistilBertForSequenceClassification = AutoModelForSequenceClassification.from_pretrained(
             pretrained_model,
             num_labels=num_labels).to(device)
+        artifact = Artifact(name='pre-trained_model', type='URL')
+        artifact.add_reference(uri='https://huggingface.co/distilbert-base-uncased')
+        run.log_artifact(artifact)
+
         training_args = TrainingArguments(output_dir=output_dir,
                                           load_best_model_at_end=True,
                                           **OmegaConf.to_object(params.training))  # dataloader_num_workers=16
@@ -121,14 +134,12 @@ def train(params: DictConfig) -> None:
         if run.sweep_id is None:
             info(f'Saving fine tuned model in {tuned_model_path}')
             trainer.save_model(tuned_model_path)
+            log_model_as_artifact(run=run, name='fine-tuned_model', local_path=tuned_model_path)
         else:
             api = wandb.Api()
             sweep_long_id = f'{run.entity}/{run.project}/{run.sweep_id}'
             sweep = api.sweep(sweep_long_id)
             best_run = sweep.best_run()
-            # metrics = best_run.history(samples=9999999999, keys=['eval/f1'])
-            # best_run_metric = max(metrics['eval/f1'])
-            # eval_f1 = res['eval_f1']
             eval_f1, best_loss, best_step = get_eval_f1_from_best_epoch(trainer.state.log_history)
             if best_run.id == run.id:
                 info(f'Current trial (run) improved the evaluation metric to {eval_f1}')
@@ -177,6 +188,10 @@ Provide an easy way to coordinate the trial info (in the SQLite DB) with the run
 Log with MLFlow the Optuna trial id of every nested run, also make sure the study name is logged -> Done
 Allow the option to resume from a previous sweep -> Done
 
+What should actually be an artifact? Should the URL to the pre-trained model be an artifact? Perhaps a parameter instead
+Log the fine-tuned model with wandb as a model
+
+Try setting the WANDB_DIR env variable https://docs.wandb.ai/guides/artifacts/storage
 Version the choice of best model
 Implement proper validation and test
 Reintroduce plot of confusion matrix
