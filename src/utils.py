@@ -1,14 +1,16 @@
 import logging
+from collections import namedtuple
+from os import system
 from pathlib import Path
 
 import numpy as np
 import transformers
 from matplotlib import pyplot as plt
+from omegaconf import DictConfig
 from sklearn.metrics import ConfusionMatrixDisplay, confusion_matrix
 from sklearn.metrics import accuracy_score, f1_score
-from wandb.sdk.wandb_run import Run
-
 from wandb import Artifact
+from wandb.sdk.wandb_run import Run
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 _logger = logging.getLogger()
@@ -62,8 +64,39 @@ def get_eval_f1_from_best_epoch(log_history: list[dict]) -> (float, float, int):
     return eval_f1, lowest_eval_loss, step
 
 
-def log_model_as_artifact(run: Run, name: str, local_path: str | Path) -> Artifact:
+def log_model(run: Run, name: str, local_path: str | Path) -> Artifact:
     artifact = Artifact(name=name, type='model')
     artifact.add_dir(local_path=local_path, name=Path(local_path).name)
     run.log_artifact(artifact)
+    run.link_artifact(artifact=artifact, target_path='model-registry')
     return artifact
+
+
+def log_nvidia_smi(run: Run) -> None:
+    nvidia_info_filename = Path('nvidia-smi.txt')
+    # nvidia_info_path = repo_root / nvidia_info_filename
+    system(f'nvidia-smi -q > {str(nvidia_info_filename)}')
+    artifact = Artifact(name='nvidia-smi', type='text')
+    artifact.add_file(local_path=nvidia_info_filename)
+    run.log_artifact(artifact)
+    nvidia_info_filename.unlink(missing_ok=True)
+
+
+Paths = namedtuple('Paths', ['repo_root', 'models', 'tuned_model'])
+
+
+def setup_paths(params: DictConfig) -> Paths:
+    # Absolute path to the repo root in the local filesystem
+    repo_root = Path('..').resolve()
+
+    # Absolute path to the directory where model and model checkpoints are to be saved and loaded from
+    models_path = (repo_root / params.main.models_dir).resolve()
+
+    # Absolute path the fine-tuned model is saved to/loaded from
+    tuned_model_path = models_path / params.main.fine_tuned_model_dir
+
+    if not models_path.exists():
+        models_path.mkdir()
+
+    res = Paths(repo_root=repo_root, models=models_path, tuned_model=tuned_model_path)
+    return res

@@ -8,7 +8,7 @@ from omegaconf import DictConfig, OmegaConf
 
 import wandb
 from train import train
-from utils import info
+from utils import info, setup_paths
 
 '''
 NOTE 
@@ -19,13 +19,14 @@ To resume a sweep (cannot be in Finished state):
 wandb sweep --resume  <entity>/<wandb_project>/<sweep_id>
 '''
 
-prj_root = Path('..').resolve()
-config_path = (prj_root / 'config').resolve()
-sweep_config_path = config_path / 'sweep.yaml'
 
 
 @hydra.main(version_base='1.3', config_path='../config', config_name='params')
 def main(params: DictConfig) -> None:
+    (repo_root, _, _) = setup_paths(params)
+    config_path = (repo_root / 'config').resolve()
+    sweep_config_path = config_path / 'sweep.yaml'
+
     info(f'These are the parameter(s) set at the beginning of the sweep:')
     for key, value in params.items():
         info(f"  '{key}': {value}")

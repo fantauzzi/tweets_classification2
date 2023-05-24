@@ -1,31 +1,30 @@
 from pathlib import Path
-from shutil import copytree, rmtree
+from shutil import rmtree
 
 import hydra
+import numpy as np
 import torch
-import transformers
 import wandb
 from datasets import load_dataset
 from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, OmegaConf
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, Trainer, TrainingArguments, \
-    DistilBertForSequenceClassification
+from sklearn.metrics import accuracy_score, f1_score
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 
-from utils import info, warning, compute_metrics, get_eval_f1_from_best_epoch, log_model, log_nvidia_smi, setup_paths
+from utils import info, warning, log_nvidia_smi, plot_confusion_matrix, setup_paths
 
 
 def train(params: DictConfig) -> None:
+    """
+    Tune the hyperparameters for best fine-tuning the model
+    :param params: the configuration parameters passed by Hydra
+    """
+
     info(f'Current working directory is {Path.cwd()}')
     hydra_output_dir = OmegaConf.to_container(HydraConfig.get().runtime)['output_dir']
     info(f'Output dir is {hydra_output_dir}')
 
-    ''' Set the RNG seed to make runs reproducible '''
-
-    seed = params.transformers.get('seed')
-    if seed is not None:
-        transformers.set_seed(params.transformers.seed)
-
-    (repo_root, models_path, tuned_model_path) = setup_paths(params)
+    paths = setup_paths(params)
 
     # Check if GPU is available
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -43,8 +42,6 @@ def train(params: DictConfig) -> None:
 
     emotions_encoded = emotions.map(tokenize, batched=True, batch_size=None)
 
-    num_labels = 6
-
     info(f'Training set contains {len(emotions_encoded["train"])} samples')
     model_name = f"{pretrained_model}-finetuned-emotion"
 
@@ -52,55 +49,48 @@ def train(params: DictConfig) -> None:
         if device.type == 'cuda':
             log_nvidia_smi(run)
 
-        output_dir = str(models_path / model_name / 'fine-tuning')
-        model: DistilBertForSequenceClassification = AutoModelForSequenceClassification.from_pretrained(
-            pretrained_model,
-            num_labels=num_labels).to(device)
-        """
-        artifact = Artifact(name='pre-trained_model', type='URL')
-        artifact.add_reference(uri='https://huggingface.co/distilbert-base-uncased')
-        run.log_artifact(artifact)
-        """
+        if params.test is not None and params.test.model is not None:
+            model_artifact = run.use_artifact(params.test.model)
+            if paths.tuned_model.exists():
+                rmtree(paths.tuned_model)
+            model_artifact.download(root=paths.models, recursive=True)
 
-        training_args = TrainingArguments(output_dir=output_dir,
-                                          load_best_model_at_end=True,
-                                          **OmegaConf.to_object(params.training))  # dataloader_num_workers=16
+        model = AutoModelForSequenceClassification.from_pretrained(paths.tuned_model)
+        tokenizer = AutoTokenizer.from_pretrained(paths.tuned_model)
+        pipe = pipeline(model=model, task='text-classification', tokenizer=tokenizer, device=0)
 
-        callbacks = [
-            transformers.EarlyStoppingCallback(
-                early_stopping_patience=params.early_stopping.patience)] if params.early_stopping.patience > 0 else []
+        val_pred = pipe(emotions['validation']['text'])
+        val_pred_labels = np.array([int(item['label'][-1]) for item in val_pred])
+        y_val = np.array(emotions["validation"]["label"])
+        eval_f1 = f1_score(y_val, val_pred_labels, average="weighted")
+        eval_acc = accuracy_score(y_val, val_pred_labels)
+        info(
+            f'Validating inference pipeline with model loaded from {paths.tuned_model} - dataset contains {len(y_val)} samples')
+        info(f'Validation f1 is {eval_f1} and validation accuracy is {eval_acc}')
+        # mf.log_params({'eval_f1': eval_f1, 'eval_acc': eval_acc})
+        wandb.run.summary['test_f1'] = eval_f1
+        wandb.run.summary['test_acc'] = eval_acc
 
-        trainer = Trainer(model=model,
-                          args=training_args,
-                          compute_metrics=compute_metrics,
-                          train_dataset=emotions_encoded["train"],
-                          eval_dataset=emotions_encoded["validation"],
-                          tokenizer=tokenizer,
-                          callbacks=callbacks)
+        labels = emotions["train"].features["label"].names
+        fig_test = plot_confusion_matrix(val_pred_labels, y_val, labels, False)
+        # mf.log_figure(fig_test, 'pipeline_validation_confusion_matrix.png')
 
-        res = trainer.train()
-        info(f'Model fine tuning results: {res}')
+        test_pred = pipe(emotions['test']['text'])
+        test_pred_labels = np.array([int(item['label'][-1]) for item in test_pred])
+        y_test = np.array(emotions["test"]["label"])
+        test_f1 = f1_score(y_test, test_pred_labels, average="weighted")
+        test_acc = accuracy_score(y_test, test_pred_labels)
+        info(
+            f'Testing inference pipeline with model loaded from {paths.tuned_model} - dataset contains {len(y_test)} samples')
+        info(f'Test f1 is {test_f1} and test accuracy is {test_acc}')
+        wandb.run.summary['test_f1'] = test_f1
+        wandb.run.summary['test_acc'] = test_acc
+        # mf.log_params({'test_f1': test_f1, 'test_acc': test_acc})
 
-        if run.sweep_id is None:
-            info(f'Saving fine tuned model in {tuned_model_path}')
-            trainer.save_model(tuned_model_path)
-            log_model(run=run, name='fine-tuned_model', local_path=tuned_model_path)
-        else:
-            api = wandb.Api()
-            sweep_long_id = f'{run.entity}/{run.project}/{run.sweep_id}'
-            sweep = api.sweep(sweep_long_id)
-            best_run = sweep.best_run()
-            eval_f1, best_loss, best_step = get_eval_f1_from_best_epoch(trainer.state.log_history)
-            if best_run.id == run.id:
-                info(f'Current trial (run) improved the evaluation metric to {eval_f1}')
-                if Path(tuned_model_path).exists():
-                    info(
-                        f'Overwriting {tuned_model_path} with best fine tuned model so far, coming from checkpoint {trainer.state.best_model_checkpoint}')
-                    rmtree(tuned_model_path)
-                else:
-                    info(
-                        f'Saving best fine tuned model so far into {tuned_model_path}, coming from checkpoint {trainer.state.best_model_checkpoint}')
-                copytree(trainer.state.best_model_checkpoint, tuned_model_path)
+        fig_test = plot_confusion_matrix(test_pred_labels, y_test, labels, False)
+        # mf.log_figure(fig_test, 'pipeline_test_confusion_matrix.png')
+
+        info('Validation and test of the inference pipeline completed')
 
 
 @hydra.main(version_base='1.3', config_path='../config', config_name='params')
@@ -137,13 +127,13 @@ Optimize hyper-parameters tuning such that it saves the best model so far at eve
 Provide an easy way to coordinate the trial info (in the SQLite DB) with the run info in MLFlow -> Done
 Log with MLFlow the Optuna trial id of every nested run, also make sure the study name is logged -> Done
 Allow the option to resume from a previous sweep -> Done
-Log the fine-tuned model with wandb as a model -> Done
 
 What should actually be an artifact? Should the URL to the pre-trained model be an artifact? Perhaps a parameter instead
+Log the fine-tuned model with wandb as a model
 
-Version the choice of best model
 Support the Netron viewer
 Try setting the WANDB_DIR env variable https://docs.wandb.ai/guides/artifacts/storage
+Version the choice of best model
 Implement proper validation and test
 Reintroduce plot of confusion matrix
 Make a GUI via gradio and / or streamlit

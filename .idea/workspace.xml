@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa6999a3-6435-4a21-abee-bf665db45413" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/tweets_classification2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tweets_classification2.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/params.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/params.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
@@ -23,6 +23,8 @@
     <setting file="file://$USER_HOME$/.pyenv/versions/tweets/lib/python3.11/site-packages/omegaconf/base.py" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/.pyenv/versions/tweets/lib/python3.11/site-packages/transformers/trainer.py" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/.pyenv/versions/tweets/lib/python3.11/site-packages/transformers/training_args.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.pyenv/versions/tweets/lib/python3.11/site-packages/wandb/sdk/wandb_artifacts.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/.pyenv/versions/tweets/lib/python3.11/site-packages/wandb/sdk/wandb_run.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectId" id="2Q3tAk91dLZJA9mHi9e8Z0wJwz4" />
   <component name="ProjectLevelVcsManager">
@@ -34,15 +36,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/fanta/workspace/homework1",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/fanta/workspace/homework1&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Python.train">
     <configuration name="runme" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tweets_classification2" />
@@ -136,7 +138,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/train.py</url>
-          <line>114</line>
+          <line>116</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
