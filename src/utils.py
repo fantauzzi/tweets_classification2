@@ -96,7 +96,7 @@ def log_nvidia_smi(run: Run) -> None:
     nvidia_info_filename.unlink(missing_ok=True)
 
 
-Paths = namedtuple('Paths', ['repo_root', 'models', 'tuned_model'])
+Paths = namedtuple('Paths', ['repo_root', 'models', 'tuned_model', 'wandb'])
 
 
 def setup_paths(params: DictConfig) -> Paths:
@@ -112,5 +112,7 @@ def setup_paths(params: DictConfig) -> Paths:
     if not models_path.exists():
         models_path.mkdir()
 
-    res = Paths(repo_root=repo_root, models=models_path, tuned_model=tuned_model_path)
+    wandb_path = repo_root / 'wandb'
+
+    res = Paths(repo_root=repo_root, models=models_path, tuned_model=tuned_model_path, wandb=wandb_path)
     return res

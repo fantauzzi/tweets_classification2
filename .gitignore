@@ -1,9 +1,9 @@
 models
 saved_model
 mlruns
+wandb
 distilbert-base-uncased-finetuned-emotion
 src/outputs
-src/wandb
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/

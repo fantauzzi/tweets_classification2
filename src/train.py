@@ -25,7 +25,7 @@ def train(params: DictConfig) -> None:
     if seed is not None:
         transformers.set_seed(params.transformers.seed)
 
-    (repo_root, models_path, tuned_model_path) = setup_paths(params)
+    (repo_root, models_path, tuned_model_path, wandb_dir) = setup_paths(params)
 
     # Check if GPU is available
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -46,7 +46,9 @@ def train(params: DictConfig) -> None:
     info(f'Training set contains {len(emotions_encoded["train"])} samples')
     model_name = f"{pretrained_model}-finetuned-emotion"
 
-    with wandb.init(params.wandb.project, config={'params': OmegaConf.to_object(params)}) as run:
+    with wandb.init(params.wandb.project,
+                    dir=wandb_dir,
+                    config={'params': OmegaConf.to_object(params)}) as run:
         if device.type == 'cuda':
             log_nvidia_smi(run)
 
@@ -134,12 +136,12 @@ Log the fine-tuned model with wandb as a model -> Done
 What should actually be an artifact? Should the URL to the pre-trained model be an artifact? -> No it shouldn't
 Implement proper validation and test -> Done
 Version the saved model -> Done
+Reintroduce plot of confusion matrix -> Done
+Try setting the WANDB_DIR env variable https://docs.wandb.ai/guides/artifacts/storage -> Done
 
 
 How do you make sure the dataset is always the same, for reproducibility? Version it somehow?
 Support the Netron viewer
-Try setting the WANDB_DIR env variable https://docs.wandb.ai/guides/artifacts/storage
-Reintroduce plot of confusion matrix
 Make a GUI via gradio and / or streamlit
 Follow Andrej recipe 
 Plot charts to W&B for debugging of the training process, as per Andrej's lectures

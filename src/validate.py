@@ -14,6 +14,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipe
 from utils import info, warning, log_nvidia_smi, setup_paths, log_confusion_matrix
 
 
+@hydra.main(version_base='1.3', config_path='../config', config_name='params')
 def validate(params: DictConfig) -> None:
     info(f'Current working directory is {Path.cwd()}')
     hydra_output_dir = OmegaConf.to_container(HydraConfig.get().runtime)['output_dir']
@@ -27,13 +28,13 @@ def validate(params: DictConfig) -> None:
         warning(f'No GPU found, device type is {device.type}')
 
     emotions = load_dataset('emotion')  # num_proc=16
-    pretrained_model = params.transformers.pretrained_model
-    tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
+    # pretrained_model = params.transformers.pretrained_model
+    # tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 
-    def tokenize(batch):
-        return tokenizer(batch['text'], padding=True, truncation=True)
+    """def tokenize(batch):
+        return tokenizer(batch['text'], padding=True, truncation=True)"""
 
-    with wandb.init(params.wandb.project, config={'params': OmegaConf.to_object(params)}) as run:
+    with wandb.init(params.wandb.project, dir = paths.wandb, config={'params': OmegaConf.to_object(params)}) as run:
         if device.type == 'cuda':
             log_nvidia_smi(run)
 
@@ -78,13 +79,8 @@ def validate(params: DictConfig) -> None:
         info('Validation and test of the inference pipeline completed')
 
 
-@hydra.main(version_base='1.3', config_path='../config', config_name='params')
-def main(params: DictConfig) -> None:
-    validate(params)
-
-
 if __name__ == '__main__':
-    main()
+    validate()
 
 """
 TODO Add a test step -> Done

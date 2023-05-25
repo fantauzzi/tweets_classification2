@@ -1,12 +1,11 @@
+import os
 from functools import partial
 from os import system
-from pathlib import Path
 
 import hydra
-# import mlflow as mf
+import wandb
 from omegaconf import DictConfig, OmegaConf
 
-import wandb
 from train import train
 from utils import info, setup_paths
 
@@ -20,12 +19,14 @@ wandb sweep --resume  <entity>/<wandb_project>/<sweep_id>
 '''
 
 
-
 @hydra.main(version_base='1.3', config_path='../config', config_name='params')
 def main(params: DictConfig) -> None:
-    (repo_root, _, _) = setup_paths(params)
+    (repo_root, _, _, wandb_dir) = setup_paths(params)
     config_path = (repo_root / 'config').resolve()
     sweep_config_path = config_path / 'sweep.yaml'
+
+    if os.environ.get('WANDB_DIR') is None:
+        os.environ['WANDB_DIR'] = str(wandb_dir)
 
     info(f'These are the parameter(s) set at the beginning of the sweep:')
     for key, value in params.items():
