@@ -27,4 +27,4 @@ training:
   logging_first_step: False
   save_strategy: 'epoch'
 test:
-  model: fine-tuned_model:v4
+  model: fine-tuned_model:v7

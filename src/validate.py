@@ -11,15 +11,10 @@ from omegaconf import DictConfig, OmegaConf
 from sklearn.metrics import accuracy_score, f1_score
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 
-from utils import info, warning, log_nvidia_smi, plot_confusion_matrix, setup_paths
+from utils import info, warning, log_nvidia_smi, setup_paths, log_confusion_matrix
 
 
-def train(params: DictConfig) -> None:
-    """
-    Tune the hyperparameters for best fine-tuning the model
-    :param params: the configuration parameters passed by Hydra
-    """
-
+def validate(params: DictConfig) -> None:
     info(f'Current working directory is {Path.cwd()}')
     hydra_output_dir = OmegaConf.to_container(HydraConfig.get().runtime)['output_dir']
     info(f'Output dir is {hydra_output_dir}')
@@ -31,19 +26,12 @@ def train(params: DictConfig) -> None:
     if device.type != 'cuda':
         warning(f'No GPU found, device type is {device.type}')
 
-    # Save the output of nvidia-smi (GPU info) into a text file, log it with MLFlow then delete the file
-
     emotions = load_dataset('emotion')  # num_proc=16
     pretrained_model = params.transformers.pretrained_model
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 
     def tokenize(batch):
         return tokenizer(batch['text'], padding=True, truncation=True)
-
-    emotions_encoded = emotions.map(tokenize, batched=True, batch_size=None)
-
-    info(f'Training set contains {len(emotions_encoded["train"])} samples')
-    model_name = f"{pretrained_model}-finetuned-emotion"
 
     with wandb.init(params.wandb.project, config={'params': OmegaConf.to_object(params)}) as run:
         if device.type == 'cuda':
@@ -53,6 +41,7 @@ def train(params: DictConfig) -> None:
             model_artifact = run.use_artifact(params.test.model)
             if paths.tuned_model.exists():
                 rmtree(paths.tuned_model)
+            info(f'Donwloading model {params.test.model} into {paths.tuned_model}')
             model_artifact.download(root=paths.models, recursive=True)
 
         model = AutoModelForSequenceClassification.from_pretrained(paths.tuned_model)
@@ -67,13 +56,11 @@ def train(params: DictConfig) -> None:
         info(
             f'Validating inference pipeline with model loaded from {paths.tuned_model} - dataset contains {len(y_val)} samples')
         info(f'Validation f1 is {eval_f1} and validation accuracy is {eval_acc}')
-        # mf.log_params({'eval_f1': eval_f1, 'eval_acc': eval_acc})
         wandb.run.summary['test_f1'] = eval_f1
         wandb.run.summary['test_acc'] = eval_acc
 
         labels = emotions["train"].features["label"].names
-        fig_test = plot_confusion_matrix(val_pred_labels, y_val, labels, False)
-        # mf.log_figure(fig_test, 'pipeline_validation_confusion_matrix.png')
+        log_confusion_matrix('validation_confusion_matrix', val_pred_labels, y_val, labels, False)
 
         test_pred = pipe(emotions['test']['text'])
         test_pred_labels = np.array([int(item['label'][-1]) for item in test_pred])
@@ -85,17 +72,15 @@ def train(params: DictConfig) -> None:
         info(f'Test f1 is {test_f1} and test accuracy is {test_acc}')
         wandb.run.summary['test_f1'] = test_f1
         wandb.run.summary['test_acc'] = test_acc
-        # mf.log_params({'test_f1': test_f1, 'test_acc': test_acc})
 
-        fig_test = plot_confusion_matrix(test_pred_labels, y_test, labels, False)
-        # mf.log_figure(fig_test, 'pipeline_test_confusion_matrix.png')
+        log_confusion_matrix('test_confusion_matrix', test_pred_labels, y_test, labels, False)
 
         info('Validation and test of the inference pipeline completed')
 
 
 @hydra.main(version_base='1.3', config_path='../config', config_name='params')
 def main(params: DictConfig) -> None:
-    train(params)
+    validate(params)
 
 
 if __name__ == '__main__':

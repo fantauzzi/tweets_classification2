@@ -32,8 +32,6 @@ def train(params: DictConfig) -> None:
     if device.type != 'cuda':
         warning(f'No GPU found, device type is {device.type}')
 
-    # Save the output of nvidia-smi (GPU info) into a text file, log it with MLFlow then delete the file
-
     emotions = load_dataset('emotion')  # num_proc=16
     pretrained_model = params.transformers.pretrained_model
     tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
@@ -56,11 +54,6 @@ def train(params: DictConfig) -> None:
         model: DistilBertForSequenceClassification = AutoModelForSequenceClassification.from_pretrained(
             pretrained_model,
             num_labels=num_labels).to(device)
-        """
-        artifact = Artifact(name='pre-trained_model', type='URL')
-        artifact.add_reference(uri='https://huggingface.co/distilbert-base-uncased')
-        run.log_artifact(artifact)
-        """
 
         training_args = TrainingArguments(output_dir=output_dir,
                                           load_best_model_at_end=True,
@@ -138,16 +131,16 @@ Provide an easy way to coordinate the trial info (in the SQLite DB) with the run
 Log with MLFlow the Optuna trial id of every nested run, also make sure the study name is logged -> Done
 Allow the option to resume from a previous sweep -> Done
 Log the fine-tuned model with wandb as a model -> Done
+What should actually be an artifact? Should the URL to the pre-trained model be an artifact? -> No it shouldn't
+Implement proper validation and test -> Done
+Version the saved model -> Done
 
-What should actually be an artifact? Should the URL to the pre-trained model be an artifact? Perhaps a parameter instead
 
-Version the choice of best model
+How do you make sure the dataset is always the same, for reproducibility? Version it somehow?
 Support the Netron viewer
 Try setting the WANDB_DIR env variable https://docs.wandb.ai/guides/artifacts/storage
-Implement proper validation and test
 Reintroduce plot of confusion matrix
 Make a GUI via gradio and / or streamlit
-Version the saved model(also the dataset?)
 Follow Andrej recipe 
 Plot charts to W&B for debugging of the training process, as per Andrej's lectures
 Give the model an API, deploy it, unit-test it
