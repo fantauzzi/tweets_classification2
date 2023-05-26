@@ -6,7 +6,7 @@ main:
   fine_tuned_model_dir: fine_tuned_model
 wandb:
   project: tweets_classification_prj
-  count: 3
+  count: 1
 mlflow:
   tracking_uri: mlruns # Relative to the root of the repo, currently only a local path is supported as uri
 transformers:
@@ -15,7 +15,7 @@ early_stopping:
   patience: 1
 training:
   seed: 8833
-  num_train_epochs: 3
+  num_train_epochs: 2
   per_device_train_batch_size: 256
   per_device_eval_batch_size: 256
   learning_rate: 2e-5

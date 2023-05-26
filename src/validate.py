@@ -29,7 +29,9 @@ def validate(params: DictConfig) -> None:
 
     emotions = load_dataset('emotion')  # num_proc=16
 
-    with wandb.init(params.wandb.project, dir = paths.wandb, config={'params': OmegaConf.to_object(params)}) as run:
+    with wandb.init(params.wandb.project,
+                    notes='Validation and test of fine-tuned model',
+                    dir = paths.wandb, config={'params': OmegaConf.to_object(params)}) as run:
         if device.type == 'cuda':
             log_nvidia_smi(run)
 

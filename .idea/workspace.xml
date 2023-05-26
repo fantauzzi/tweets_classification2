@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="50e76287-f1ee-4e6b-bcb4-265032b2a5e4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/params.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/params.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sweep.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sweep.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
@@ -39,7 +41,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PythonContentEntriesConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.validate">
+  <component name="RunManager" selected="Python.train">
     <configuration name="sweep" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tweets_classification2" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -110,9 +112,9 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.validate" />
         <item itemvalue="Python.train" />
         <item itemvalue="Python.sweep" />
+        <item itemvalue="Python.validate" />
       </list>
     </recent_temporary>
   </component>
@@ -132,7 +134,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/train.py</url>
-          <line>105</line>
+          <line>106</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

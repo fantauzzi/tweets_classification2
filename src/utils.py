@@ -83,10 +83,9 @@ def log_model(run: Run, name: str, local_path: str | Path) -> wandb.Artifact:
 
 def log_nvidia_smi(run: Run) -> None:
     nvidia_info_filename = Path('nvidia-smi.txt')
-    # nvidia_info_path = repo_root / nvidia_info_filename
     system(f'nvidia-smi -q > {str(nvidia_info_filename)}')
     artifact = wandb.Artifact(name='nvidia-smi', type='text')
-    artifact.add_file(local_path=nvidia_info_filename)
+    artifact.add_file(local_path=str(nvidia_info_filename))
     run.log_artifact(artifact)
     nvidia_info_filename.unlink(missing_ok=True)
 

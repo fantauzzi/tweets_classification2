@@ -7,7 +7,7 @@ import wandb
 from omegaconf import DictConfig, OmegaConf
 
 from train import train
-from utils import info, setup_paths
+from utils import info, setup_paths, log_model
 
 '''
 NOTE 
@@ -23,7 +23,7 @@ wandb sweep --resume  <entity>/<wandb_project>/<sweep_id>
 
 @hydra.main(version_base='1.3', config_path='../config', config_name='params')
 def main(params: DictConfig) -> None:
-    (repo_root, _, _, wandb_dir) = setup_paths(params)
+    (repo_root, _, tuned_model_path, wandb_dir) = setup_paths(params)
     config_path = (repo_root / 'config').resolve()
     sweep_config_path = config_path / 'sweep.yaml'
 
@@ -50,6 +50,11 @@ def main(params: DictConfig) -> None:
     info(f'Starting sweep for {params.wandb.count} iteration(s) with id {sweep_id}')
     train_with_params = partial(train, params)
     wandb.agent(sweep_id, function=train_with_params, count=params.wandb.count)
+    # Start a run in order to log the best model trained during the sweep
+    info(f'Starting run to log the best optimzed model from the sweep, saved in {tuned_model_path}')
+    with wandb.init(notes='Logging of the best fine-tuned model produced during the sweep') as run:
+        log_model(run=run, name='fine-tuned_model', local_path=tuned_model_path)
+        wandb.log(data={'sweep_id': sweep_id})
 
     # Stop the sweep
 

@@ -47,6 +47,7 @@ def train(params: DictConfig) -> None:
     model_name = f"{pretrained_model}-finetuned-emotion"
 
     with wandb.init(params.wandb.project,
+                    notes='Fine-tuning of pre-trained model',
                     dir=wandb_dir,
                     config={'params': OmegaConf.to_object(params)}) as run:
         if device.type == 'cuda':
