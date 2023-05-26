@@ -112,7 +112,7 @@ def setup_paths(params: DictConfig) -> Paths:
     if not models_path.exists():
         models_path.mkdir()
 
-    wandb_path = repo_root / 'wandb'
+    wandb_path = repo_root
 
     res = Paths(repo_root=repo_root, models=models_path, tuned_model=tuned_model_path, wandb=wandb_path)
     return res

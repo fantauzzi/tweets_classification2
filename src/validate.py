@@ -28,8 +28,6 @@ def validate(params: DictConfig) -> None:
         warning(f'No GPU found, device type is {device.type}')
 
     emotions = load_dataset('emotion')  # num_proc=16
-    # pretrained_model = params.transformers.pretrained_model
-    # tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 
     """def tokenize(batch):
         return tokenizer(batch['text'], padding=True, truncation=True)"""
@@ -109,7 +107,6 @@ Provide an easy way to coordinate the trial info (in the SQLite DB) with the run
 Log with MLFlow the Optuna trial id of every nested run, also make sure the study name is logged -> Done
 Allow the option to resume from a previous sweep -> Done
 
-What should actually be an artifact? Should the URL to the pre-trained model be an artifact? Perhaps a parameter instead
 Log the fine-tuned model with wandb as a model
 
 Support the Netron viewer

@@ -14,6 +14,8 @@ NOTE
 To start the sweep from command line, cd into the `src` directory and then:
 wandb sweep --project <wandb_project> ../config/sweep.yaml
 
+To set the `wandb` directoty location, set the `WANDB_DIR` env. variable before running the above
+
 To resume a sweep (cannot be in Finished state):
 wandb sweep --resume  <entity>/<wandb_project>/<sweep_id>
 '''
