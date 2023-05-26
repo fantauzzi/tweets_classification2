@@ -35,21 +35,24 @@ def main(params: DictConfig) -> None:
         info(f"  '{key}': {value}")
 
     # Configure the sweep
+
     info(f'Loading sweep configuration from {sweep_config_path}')
     sweep_configuration = OmegaConf.load(sweep_config_path)
     # If the sweep config. contains a 'command' key, then remove it. That is needed only to start a sweep from the CLI;
-    # here it would generate an error `omegaconf.errors.InterpolationKeyError: Interpolation key 'env' not found`
+    # here it would generate an error: `omegaconf.errors.InterpolationKeyError: Interpolation key 'env' not found`
     if sweep_configuration.get('command') is not None:
         del sweep_configuration['command']
     sweep_configuration = OmegaConf.to_object(sweep_configuration)
 
-    # Start a sweep
+    # Start the sweep
+
     sweep_id = wandb.sweep(sweep=sweep_configuration, project=params.wandb.project)
     info(f'Starting sweep for {params.wandb.count} iteration(s) with id {sweep_id}')
     train_with_params = partial(train, params)
     wandb.agent(sweep_id, function=train_with_params, count=params.wandb.count)
 
     # Stop the sweep
+
     api = wandb.Api()
     prj = api.project(params.wandb.project)
     sweep_long_id = f'{prj.entity}/{params.wandb.project}/{sweep_id}'

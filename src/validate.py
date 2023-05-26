@@ -29,9 +29,6 @@ def validate(params: DictConfig) -> None:
 
     emotions = load_dataset('emotion')  # num_proc=16
 
-    """def tokenize(batch):
-        return tokenizer(batch['text'], padding=True, truncation=True)"""
-
     with wandb.init(params.wandb.project, dir = paths.wandb, config={'params': OmegaConf.to_object(params)}) as run:
         if device.type == 'cuda':
             log_nvidia_smi(run)
@@ -66,6 +63,7 @@ def validate(params: DictConfig) -> None:
         y_test = np.array(emotions["test"]["label"])
         test_f1 = f1_score(y_test, test_pred_labels, average="weighted")
         test_acc = accuracy_score(y_test, test_pred_labels)
+
         info(
             f'Testing inference pipeline with model loaded from {paths.tuned_model} - dataset contains {len(y_test)} samples')
         info(f'Test f1 is {test_f1} and test accuracy is {test_acc}')
@@ -79,44 +77,3 @@ def validate(params: DictConfig) -> None:
 
 if __name__ == '__main__':
     validate()
-
-"""
-TODO Add a test step -> Done
-Turn the  script into an MLFlow project -> Done
-Store hyperparameters in a config.file -> Done
-Introduce proper logging -> Done
-Tune hyperparameters(using some framework / library) -> Done
-(Re -)train and save -> Done
-Do proper testing of inference from saved model -> Done
-Draw charts of the training and validation loss and the confusion matrix under MLFlow -> Done
-Implement early-stopping -> Done
-Make a nested run for every Optuna trial -> Done
-Send the training to the cloud -> Done
-Make sure GPU info is logged -> Done
-Ensure parameters for every trial are logged, at least the changing ones -> Done
-Split MLFlowTrialCB() in its own file -> Done
-Try GPU on Amazon/google free service -> Done
-Have actually random run names even with a set random seed -> Done
-Fix reproducibility -> Done
-Make sure hyperparameters search works correctly -> Done
-Can fine-tuning be interrupted and resumed? -> Done, yes!
-Fix up call to optimize() -> Done
-Optimize hyper-parameters tuning such that it saves the best model so far at every trial, so it doesn't have to be
-    computed again later (is it even possible?) -> Done (yes it is)
-Provide an easy way to coordinate the trial info (in the SQLite DB) with the run info in MLFlow -> Done
-Log with MLFlow the Optuna trial id of every nested run, also make sure the study name is logged -> Done
-Allow the option to resume from a previous sweep -> Done
-
-Log the fine-tuned model with wandb as a model
-
-Support the Netron viewer
-Try setting the WANDB_DIR env variable https://docs.wandb.ai/guides/artifacts/storage
-Version the choice of best model
-Implement proper validation and test
-Reintroduce plot of confusion matrix
-Make a GUI via gradio and / or streamlit
-Version the saved model(also the dataset?)
-Follow Andrej recipe 
-Plot charts to W&B for debugging of the training process, as per Andrej's lectures
-Give the model an API, deploy it, unit-test it
-"""

@@ -51,12 +51,7 @@ def plot_confusion_matrix(y_preds: np.ndarray, y_true: np.ndarray, labels: list[
 def log_confusion_matrix(media_title: str, y_preds: np.ndarray, y_true: np.ndarray, labels: list[str],
                          show=True) -> None:
     fig_val = plot_confusion_matrix(y_preds, y_true, labels, show)
-    conf_matrix_filename = 'confusion_matrix.png'
-    try:
-        fig_val.savefig(fname=conf_matrix_filename)
-        wandb.log({media_title: wandb.Image(conf_matrix_filename)})
-    finally:
-        Path(conf_matrix_filename).unlink(missing_ok=True)
+    wandb.log({media_title: fig_val})
 
 
 def get_eval_f1_from_best_epoch(log_history: list[dict]) -> (float, float, int):

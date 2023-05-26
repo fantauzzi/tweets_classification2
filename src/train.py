@@ -76,10 +76,13 @@ def train(params: DictConfig) -> None:
         res = trainer.train()
         info(f'Model fine tuning results: {res}')
 
+        # If the run is not part of a sweep, save the optimized model and then log it with wandb
         if run.sweep_id is None:
             info(f'Saving fine tuned model in {tuned_model_path}')
             trainer.save_model(tuned_model_path)
             log_model(run=run, name='fine-tuned_model', local_path=tuned_model_path)
+        # If the run is part of a sweep, check if its metrics are the best so far, and in case save the optimized model
+        # as the best so far, but do not log it with wandb.
         else:
             api = wandb.Api()
             sweep_long_id = f'{run.entity}/{run.project}/{run.sweep_id}'
@@ -138,8 +141,8 @@ Implement proper validation and test -> Done
 Version the saved model -> Done
 Reintroduce plot of confusion matrix -> Done
 Try setting the WANDB_DIR env variable https://docs.wandb.ai/guides/artifacts/storage -> Done
+The WANDB_DIR must point to the parent of the wanted directory, also for the dir argument perhaps? -> Done
 
-The WANDB_DIR must point to the parent of the wanted directory, also for the dir argument perhaps?
 How do you make sure the dataset is always the same, for reproducibility? Version it somehow?
 Support the Netron viewer
 Make a GUI via gradio and / or streamlit
