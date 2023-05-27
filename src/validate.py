@@ -31,7 +31,7 @@ def validate(params: DictConfig) -> None:
 
     with wandb.init(params.wandb.project,
                     notes='Validation and test of fine-tuned model',
-                    dir = paths.wandb, config={'params': OmegaConf.to_object(params)}) as run:
+                    dir=paths.wandb, config={'params': OmegaConf.to_object(params)}) as run:
         if device.type == 'cuda':
             log_nvidia_smi(run)
 
@@ -42,7 +42,7 @@ def validate(params: DictConfig) -> None:
             info(f'Donwloading model {params.test.model} into {paths.tuned_model}')
             model_artifact.download(root=paths.models, recursive=True)
 
-        model = AutoModelForSequenceClassification.from_pretrained(paths.tuned_model)
+        model = AutoModelForSequenceClassification.from_pretrained(paths.tuned_model).to(device)
         tokenizer = AutoTokenizer.from_pretrained(paths.tuned_model)
         pipe = pipeline(model=model, task='text-classification', tokenizer=tokenizer, device=0)
 

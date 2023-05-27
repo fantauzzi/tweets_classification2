@@ -143,11 +143,14 @@ Version the saved model -> Done
 Reintroduce plot of confusion matrix -> Done
 Try setting the WANDB_DIR env variable https://docs.wandb.ai/guides/artifacts/storage -> Done
 The WANDB_DIR must point to the parent of the wanted directory, also for the dir argument perhaps? -> Done
+Log the model output of the sweep -> Done
+Send fine-tuned model to GPU before using it for testing or inference -> Done
 
+Why has this model been uploaded in the wrong project? https://wandb.ai/fantauzzi/tweets_classification2-src/artifacts/model/fine-tuned_model/e0f7c860e1dbc1f2d3ec 
+Give the model an API, deploy it, unit-test it
 How do you make sure the dataset is always the same, for reproducibility? Version it somehow?
 Support the Netron viewer
 Make a GUI via gradio and / or streamlit
 Follow Andrej recipe 
 Plot charts to W&B for debugging of the training process, as per Andrej's lectures
-Give the model an API, deploy it, unit-test it
 """
