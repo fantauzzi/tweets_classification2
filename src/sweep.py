@@ -52,7 +52,10 @@ def main(params: DictConfig) -> None:
     wandb.agent(sweep_id, function=train_with_params, count=params.wandb.count)
     # Start a run in order to log the best model trained during the sweep
     info(f'Starting run to log the best optimzed model from the sweep, saved in {tuned_model_path}')
-    with wandb.init(notes='Logging of the best fine-tuned model produced during the sweep') as run:
+    with wandb.init(project=params.wandb.project,
+                    notes='Logging of the best fine-tuned model produced during the sweep',
+                    dir=wandb_dir,
+                    config={'params': OmegaConf.to_object(params)}) as run:
         log_model(run=run, name='fine-tuned_model', local_path=tuned_model_path)
         wandb.log(data={'sweep_id': sweep_id})
 

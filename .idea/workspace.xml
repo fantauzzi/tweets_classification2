@@ -7,7 +7,7 @@
     <list default="true" id="50e76287-f1ee-4e6b-bcb4-265032b2a5e4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/params.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/params.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python_env.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/python_env.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sweep.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sweep.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/train.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/validate.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/validate.py" afterDir="false" />
     </list>
@@ -40,7 +40,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PythonContentEntriesConfigurable&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.validate">
+  <component name="RunManager" selected="Python.sweep">
     <configuration name="inference" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tweets_classification2" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -62,7 +62,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="server" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="sweep" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tweets_classification2" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -74,10 +74,10 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/server.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/sweep.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
@@ -141,19 +141,19 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.sweep" />
       <item itemvalue="Python.validate" />
       <item itemvalue="Python.inference" />
-      <item itemvalue="Python.server" />
       <item itemvalue="Python.train" />
       <item itemvalue="Shell Script.runserver.sh" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.validate" />
-        <item itemvalue="Python.inference" />
+        <item itemvalue="Python.sweep" />
         <item itemvalue="Python.train" />
+        <item itemvalue="Python.inference" />
+        <item itemvalue="Python.validate" />
         <item itemvalue="Shell Script.runserver.sh" />
-        <item itemvalue="Python.server" />
       </list>
     </recent_temporary>
   </component>
@@ -173,8 +173,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/validate.py</url>
-          <line>57</line>
+          <line>58</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/inference.py</url>
+          <line>35</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/train.py</url>
+          <line>48</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -46,7 +46,7 @@ def train(params: DictConfig) -> None:
     info(f'Training set contains {len(emotions_encoded["train"])} samples')
     model_name = f"{pretrained_model}-finetuned-emotion"
 
-    with wandb.init(params.wandb.project,
+    with wandb.init(project=params.wandb.project,
                     notes='Fine-tuning of pre-trained model',
                     dir=wandb_dir,
                     config={'params': OmegaConf.to_object(params)}) as run:
