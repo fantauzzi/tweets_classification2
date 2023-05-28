@@ -37,6 +37,7 @@ def main(params: DictConfig) -> None:
     # Configure the sweep
 
     info(f'Loading sweep configuration from {sweep_config_path}')
+    info(f'Loading sweep configuration from {sweep_config_path}')
     sweep_configuration = OmegaConf.load(sweep_config_path)
     # If the sweep config. contains a 'command' key, then remove it. That is needed only to start a sweep from the CLI;
     # here it would generate an error: `omegaconf.errors.InterpolationKeyError: Interpolation key 'env' not found`
@@ -54,7 +55,6 @@ def main(params: DictConfig) -> None:
     info(f'Starting run to log the best optimzed model from the sweep, saved in {tuned_model_path}')
     with wandb.init(project=params.wandb.project,
                     notes='Logging of the best fine-tuned model produced during the sweep',
-                    dir=wandb_dir,
                     config={'params': OmegaConf.to_object(params)}) as run:
         log_model(run=run, name='fine-tuned_model', local_path=tuned_model_path)
         wandb.log(data={'sweep_id': sweep_id})

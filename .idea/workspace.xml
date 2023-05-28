@@ -8,8 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/params.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/params.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sweep.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/sweep.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/train.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/validate.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/validate.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +54,7 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/inference.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="EMULATE_TERMINAL" value="true" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
@@ -77,7 +75,7 @@
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/sweep.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="EMULATE_TERMINAL" value="true" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
@@ -150,9 +148,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.sweep" />
+        <item itemvalue="Python.validate" />
         <item itemvalue="Python.train" />
         <item itemvalue="Python.inference" />
-        <item itemvalue="Python.validate" />
         <item itemvalue="Shell Script.runserver.sh" />
       </list>
     </recent_temporary>
@@ -182,9 +180,19 @@
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/train.py</url>
-          <line>48</line>
-          <option name="timeStamp" value="3" />
+          <url>file://$PROJECT_DIR$/src/sweep.py</url>
+          <line>49</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/.pyenv/versions/3.11.3/envs/tweets/lib/python3.11/site-packages/wandb/sdk/internal/internal_api.py</url>
+          <line>2401</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/.pyenv/versions/3.11.3/envs/tweets/lib/python3.11/site-packages/wandb/sdk/wandb_sweep.py</url>
+          <line>109</line>
+          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
