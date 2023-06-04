@@ -23,7 +23,7 @@ wandb sweep --resume  <entity>/<wandb_project>/<sweep_id>
 
 @hydra.main(version_base='1.3', config_path='../config', config_name='params')
 def main(params: DictConfig) -> None:
-    (repo_root, _, tuned_model_path, wandb_dir) = setup_paths(params)
+    (repo_root, _, tuned_model_path, wandb_dir, _) = setup_paths(params)
     config_path = (repo_root / 'config').resolve()
     sweep_config_path = config_path / 'sweep.yaml'
 

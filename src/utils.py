@@ -1,9 +1,11 @@
 import logging
+import time
 from collections import namedtuple
 from os import system
 from pathlib import Path
 
 import numpy as np
+import openai
 import transformers
 import wandb
 from matplotlib import pyplot as plt
@@ -90,7 +92,7 @@ def log_nvidia_smi(run: Run) -> None:
     nvidia_info_filename.unlink(missing_ok=True)
 
 
-Paths = namedtuple('Paths', ['repo_root', 'models', 'tuned_model', 'wandb'])
+Paths = namedtuple('Paths', ['repo_root', 'models', 'tuned_model', 'wandb', 'data'])
 
 
 def setup_paths(params: DictConfig) -> Paths:
@@ -108,5 +110,41 @@ def setup_paths(params: DictConfig) -> Paths:
 
     wandb_path = repo_root
 
-    res = Paths(repo_root=repo_root, models=models_path, tuned_model=tuned_model_path, wandb=wandb_path)
+    data_path = repo_root / 'data'
+
+    res = Paths(repo_root=repo_root,
+                models=models_path,
+                tuned_model=tuned_model_path,
+                wandb=wandb_path,
+                data=data_path)
     return res
+
+
+api_rate = 3500
+
+
+def get_classification_from_openai(messages,
+                                   model="gpt-3.5-turbo",
+                                   temperature=0,
+                                   max_tokens=500):
+    if get_classification_from_openai.prev_call is not None:
+        current_time = time.time()
+        elapsed = current_time - get_classification_from_openai.prev_call
+        if elapsed < 1 / api_rate:
+            time.sleep(1 / api_rate - elapsed)
+    get_classification_from_openai.prev_call = time.time()
+    response = None
+    while response is None:
+        try:
+            response = openai.ChatCompletion.create(
+                model=model,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens)
+        except openai.error.RateLimitError:
+            info(f'Exceeded OpenAI API rate limit, pausing for {1 / api_rate} seconds')
+            time.sleep(1 / api_rate)
+    return response.choices[0].message["content"]
+
+
+get_classification_from_openai.prev_call = None

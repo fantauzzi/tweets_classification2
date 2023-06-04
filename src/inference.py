@@ -1,6 +1,5 @@
 from shutil import rmtree
 
-import numpy as np
 import torch
 from hydra import initialize, compose
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline

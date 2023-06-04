@@ -31,3 +31,6 @@ training:
   save_strategy: 'epoch'
 test:
   model: # fine-tuned_model:v13
+openai:
+  dataset_file: requests_for_GPT.jsonl
+  temperature: 0.0

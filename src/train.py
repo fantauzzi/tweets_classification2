@@ -25,7 +25,7 @@ def train(params: DictConfig) -> None:
     if seed is not None:
         transformers.set_seed(params.transformers.seed)
 
-    (repo_root, models_path, tuned_model_path, wandb_dir) = setup_paths(params)
+    (repo_root, models_path, tuned_model_path, wandb_dir, _) = setup_paths(params)
 
     # Check if GPU is available
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
