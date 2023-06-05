@@ -3,8 +3,10 @@
 Credit: This source file from OpenAI's Cookbook
 https://github.com/openai/openai-cookbook/blob/main/examples/api_request_parallel_processor.py
 
-Usage example:
-python api_request_parallel_processor.py --requests_filepath requests_for_openai.jsonl --request_url https://api.openai.com/v1/chat/completions  --max_requests_per_minute 3500
+Usage examples:
+python api_request_parallel_processor.py --requests_filepath ../data/requests_for_GPT.jsonl --request_url https://api.openai.com/v1/chat/completions  --max_requests_per_minute 3500
+python api_request_parallel_processor.py --requests_filepath ../data/validation_set_prepared.jsonl --request_url https://api.openai.com/v1/completions  --max_requests_per_minute 3500
+NOTE: if the output file exists, the script will append its output to the existing file.
 """
 
 """

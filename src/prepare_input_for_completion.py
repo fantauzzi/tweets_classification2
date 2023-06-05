@@ -19,8 +19,13 @@ def prepare_input(params: DictConfig) -> None:
     paths = setup_paths(params)
 
     emotions = load_dataset('emotion')
-    dataset = emotions['validation']['text'][:100]
-    dataset_file = paths.data / params.openai.dataset_file
+    dataset = emotions['train']['text'][:100]
+
+
+
+    dataset_file = paths.data / 'training_set.csv'
+    emotions['train'].to_csv(dataset_file)
+    exit(0)
     if Path(dataset_file).exists():
         info(f'Output file {dataset_file} exists and will be overwritten')
     with open(dataset_file, 'wt') as jsonl:

@@ -55,7 +55,7 @@ def validate(params: DictConfig) -> None:
         info(
             f'Validating inference pipeline with model loaded from {paths.tuned_model} - dataset contains {len(y_val)} samples')
         info(f'Validation f1 is {eval_f1} and validation accuracy is {eval_acc}')
-        wandb.run.summary['test_f1'] = eval_f1
+        wandb.run.summary['test_f1'] = eval_f1  # TODO WTF???
         wandb.run.summary['test_acc'] = eval_acc
 
         labels = emotions["train"].features["label"].names
