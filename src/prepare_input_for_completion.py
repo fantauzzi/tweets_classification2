@@ -1,15 +1,16 @@
-import json
 from pathlib import Path
-from time import sleep
 
 import hydra
 from datasets import load_dataset
 from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, OmegaConf
-from tqdm import tqdm
 
 from utils import info, setup_paths
 
+# openai tools fine_tunes.prepare_data -f ../data/train.csv
+# openai api fine_tunes.create -t "../data/train_prepared.jsonl" -v ../data/validation_prepared.jsonl  -m ada --compute_classification_metrics --classification_n_classes 6
+# openai wandb sync <== should do it from the root of the repo
+# openai api fine_tunes.results -i job-ID > ../data/report.csv
 
 @hydra.main(version_base='1.3', config_path='../config', config_name='params')
 def prepare_input(params: DictConfig) -> None:
@@ -19,37 +20,23 @@ def prepare_input(params: DictConfig) -> None:
     paths = setup_paths(params)
 
     emotions = load_dataset('emotion')
-    dataset = emotions['train']['text'][:100]
 
+    def save_csv(dataset: str) -> None:
+        dataset_file = paths.data / f'{dataset}.csv'
+        emotions[dataset].to_csv(dataset_file)
+        tmp_file = paths.data / f'{dataset}.tmp.csv'
+        with open(tmp_file, 'wt') as write_to:
+            with open(dataset_file) as read_from:
+                write_to.write('prompt,completion\n')
+                read_from.readline()
+                everything_else = read_from.readlines()
+                write_to.writelines(everything_else)
+        Path(dataset_file).unlink()
+        Path(tmp_file).rename(str(dataset_file))
+        info(f'Saved dataset with {len(emotions[dataset])} samples into {dataset_file}')
 
-
-    dataset_file = paths.data / 'training_set.csv'
-    emotions['train'].to_csv(dataset_file)
-    exit(0)
-    if Path(dataset_file).exists():
-        info(f'Output file {dataset_file} exists and will be overwritten')
-    with open(dataset_file, 'wt') as jsonl:
-        for user_message in tqdm(dataset):
-            delimiter = "####"
-            system_message = f"""
-            You will be provided with the text of tweets. \
-            The tweets will be delimited with \
-            {delimiter} characters. \
-            Classify each tweet into one and only one of these sentiments: sadness, joy, love, anger, fear , surprise. \
-            If you are uncertain then classify as uncertain. \ 
-            Provide your output in json format with the \
-            key sentiment and value the sentiment.
-            """
-            messages = [
-                {'role': 'system',
-                 'content': system_message},
-                {'role': 'user',
-                 'content': f"{delimiter}{user_message}{delimiter}"},
-            ]
-            jsonl_line = f'{{"model": params.openai.model, "messages": {json.dumps(messages)},"temperature": {params.openai.temperature}}}\n'
-            jsonl.write(jsonl_line)
-    sleep(.1)  # Allow tqdm to make the last update to its progress bar
-    info(f'Feteched {len(dataset)} predictions from API and saving them into {dataset_file}')
+    save_csv('train')
+    save_csv('validation')
 
 
 if __name__ == '__main__':

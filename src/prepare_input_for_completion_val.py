@@ -22,7 +22,7 @@ def prepare_input(params: DictConfig) -> None:
     dataset = emotions['validation']['text']
 
     dataset_file = paths.data / 'validation_set_prepared.jsonl'
-    emotions['train'].to_csv(dataset_file)
+    # emotions['train'].to_csv(dataset_file)
     if Path(dataset_file).exists():
         info(f'Output file {dataset_file} exists and will be overwritten')
     suffix = " ->"

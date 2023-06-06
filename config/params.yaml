@@ -33,7 +33,7 @@ test:
   model: # fine-tuned_model:v13
 openai:
   dataset_file: requests_for_GPT.jsonl
-  results_file: requests_for_GPT_results.jsonl
+  results_file: validation_set_prepared_results.jsonl
   temperature: 0.0
   model: text-ada-001
   fine_tuned_model: ada:ft-personal-2023-06-05-13-31-11
