@@ -32,9 +32,9 @@ training:
 test:
   model: # fine-tuned_model:v13
 openai:
-  dataset_file: requests_for_GPT.jsonl
-  results_file: validation_set_prepared_results.jsonl
-  temperature: 0.0
-  model: text-ada-001
+  # dataset_file: requests_for_GPT.jsonl
+  results_file: test_prepared_results.jsonl
+  # temperature: 0.0
+  # model: text-ada-001
   fine_tuned_model: curie:ft-personal-2023-06-06-12-04-14
-  endpoint: https://api.openai.com/v1/completions
+  # endpoint: https://api.openai.com/v1/completions

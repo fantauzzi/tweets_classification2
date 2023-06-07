@@ -19,6 +19,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 _logger = logging.getLogger()
 info = _logger.info
 warning = _logger.warning
+error = _logger.error
 
 info(f'Matplotlib backend is {get_backend()}')
 
