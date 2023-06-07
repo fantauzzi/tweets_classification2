@@ -5,15 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="50e76287-f1ee-4e6b-bcb4-265032b2a5e4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/tweets_classification2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tweets_classification2.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/params.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/params.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/data/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/requests_for_GPT_results.jsonl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/training_set.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/validation_set_prepared_results.jsonl" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/prepare_input_for_completion.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/prepare_input_for_completion.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/prepare_input_for_completion_val.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/prepare_input_for_completion_val.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/prepare_input_for_completion_val.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/prepare_input_for_completion_test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,15 +31,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/fanta/workspace/tweets_classification2/src&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/fanta/workspace/tweets_classification2/src",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.new.ui"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
@@ -56,7 +51,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.prepare_input_for_completion">
+  <component name="RunManager" selected="Python.prepare_input_for_completion_test">
     <configuration name="prepare_input_for_completion" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tweets_classification2" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -78,7 +73,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="prepare_input_for_completion_val" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="prepare_input_for_completion_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="tweets_classification2" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -90,7 +85,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/prepare_input_for_completion_val.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/prepare_input_for_completion_test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -163,17 +158,17 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.prepare_input_for_completion_test" />
       <item itemvalue="Python.validate_completion" />
-      <item itemvalue="Python.prepare_input_for_completion_val" />
       <item itemvalue="Python.prepare_input_for_completion" />
       <item itemvalue="Python.validate_GPT" />
       <item itemvalue="Python.validate" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.prepare_input_for_completion_test" />
         <item itemvalue="Python.prepare_input_for_completion" />
         <item itemvalue="Python.validate_completion" />
-        <item itemvalue="Python.prepare_input_for_completion_val" />
         <item itemvalue="Python.validate_GPT" />
         <item itemvalue="Python.validate" />
       </list>

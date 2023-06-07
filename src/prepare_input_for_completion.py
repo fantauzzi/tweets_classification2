@@ -1,3 +1,9 @@
+"""
+Save the "emotions" dataset for Twitter sentiment classification into CSV files, one for the train set and one for
+the validation set. The CSV files can then be easily converted into JSON using `openai tools fine_tunes.prepare_data`.
+
+"""
+
 from pathlib import Path
 
 import hydra

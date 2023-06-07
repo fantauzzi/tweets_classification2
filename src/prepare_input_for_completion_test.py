@@ -19,21 +19,21 @@ def prepare_input(params: DictConfig) -> None:
     paths = setup_paths(params)
 
     emotions = load_dataset('emotion')
-    dataset = emotions['validation']['text']
+    dataset = emotions['test']['text']
 
-    dataset_file = paths.data / 'validation_set_prepared.jsonl'
-    # emotions['train'].to_csv(dataset_file)
+    dataset_file = paths.data / 'test_prepared.jsonl'
     if Path(dataset_file).exists():
         info(f'Output file {dataset_file} exists and will be overwritten')
     suffix = " ->"
     info(
-        f'Saving validation set with {len(dataset)} samples prepared for fine-tuned model {params.openai.fine_tuned_model} in {dataset_file}')
+        f'Saving test set with {len(dataset)} samples prepared for fine-tuned model {params.openai.fine_tuned_model} in {dataset_file}')
     with open(dataset_file, 'wt') as jsonl:
-        for user_message in tqdm(dataset):
+        for user_message, row_id in tqdm(zip(dataset, range(len(dataset)))):
             line = {'prompt': f'{user_message}{suffix}',
                     'max_tokens': 1,
                     'logprobs': 6,
-                    'model': params.openai.fine_tuned_model}
+                    'model': params.openai.fine_tuned_model,
+                    'metadata': {'row_id': row_id}}
             jsonl_line = json.dumps(line) + '\n'
             jsonl.write(jsonl_line)
     sleep(.1)  # Allow tqdm to make the last update to its progress bar

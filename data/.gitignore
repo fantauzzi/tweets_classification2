@@ -1,4 +1,2 @@
-requests_for_GPT.jsonl
-training_set_prepared.jsonl
-validation_set_prepared.jsonl
+*.jsonl
 *.csv
