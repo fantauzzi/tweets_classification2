@@ -1,41 +1,27 @@
+"""
+Note: the working directory to run the unit-test should be src, not src/test, otherwise there will be errors
+"""
 import sys
-from pathlib import Path  # if you haven't already done so
+from pathlib import Path
 
 parent = (Path(__file__).parent / '..').resolve()
 sys.path.append(str(parent))
 
-import requests
 import json
-import multiprocessing
-from time import sleep
 
-import pytest
-import uvicorn
-
-from server import app
+from server import test_client
 
 
-def run_server(host, port):
-    uvicorn.run(app, host=host, port=port)
-
-
-@pytest.fixture(autouse=True, scope="session")
-def start_server():
-    p = multiprocessing.Process(target=run_server, args=('127.0.0.1', 8000))
-    p.start()
-    res = None
-    retries = 30
-    while (res is None or res.status_code != 200) and retries > 0:
-        sleep(1)
-        res = requests.get('http://127.0.0.1:8000')
-        retries -= 1
-    yield
-    p.terminate()
-
-
-def test_root(start_server):
-    res = requests.get('http://127.0.0.1:8000')
+def test_root():
+    res = test_client.get('http://127.0.0.1:8000')
     assert res.status_code == 200
     content_decoded = res.content.decode('utf8')
     content_json = json.loads(content_decoded)
     assert content_json['Howdy'] == 'partner!'
+
+
+def test_inference():
+    tweet = 'i dont blame it all to them and im not angry at them infact i feel fairly sympathetic for them'
+    res = test_client.get(f'http://127.0.0.1:8000/inference/{tweet}')
+    assert res.status_code == 200
+
