@@ -41,8 +41,10 @@ if __name__ == '__main__':
 
 """
 TODO
-Impement automated unit-tests that call the API
+Try unit-test with WebSocket sessions, see https://www.starlette.io/testclient/
 Implement a GUI with gradio and/or streamlit 
 Use Hugging Face endpoints
 Implement the inference for OpenAI's GPT too
+Do deployment in a docker container
+Implement authentication in the API
 """
